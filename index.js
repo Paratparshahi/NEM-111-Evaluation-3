@@ -15,7 +15,7 @@ app.post("/signup", async (req, res) => {
     const {email, password} = req.body;
     bcrypt.hash(password, 5, async function(err, hashed_password) {
         if(err){
-            res.send("Something went wrong, please signup later")
+            res.send("Something went wrong, please signup later");
         }
         const new_user = new UserModel({
             email : email,
@@ -31,7 +31,9 @@ app.post("/login", async (req, res) => {
     const user = await UserModel.findOne({email});
     console.log(user,password,email)
     const hashed_password = user.password;
-    bcrypt.compare(password, hashed_password, function(err, result) {
+   const result= await bcrypt.compare(password, hashed_password) ;
+   console.log(result);
+   
         if(result){
             const token = jwt.sign({email : email}, 'abcd12345')
             res.send({"msg" : "Login successfull", "token" : token})
@@ -41,24 +43,21 @@ app.post("/login", async (req, res) => {
             console.log(err);
             console.log(password,result);
         } 
-    });
+    
 })
-app.use((req,res,next)=>{
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
-        const userId = decodedToken.userId;
-        if (req.body.userId && req.body.userId !== userId) {
-          throw 'Invalid user ID';
-        } else {
-          next();
-        }
-      } catch {
-        res.status(401).json({
-          error: new Error('Invalid request!')
-        });
-      }
-})
+// app.use((req,res,next)=>{
+//     try {
+//          const token = req.headers.authorization.split(' ')[1];
+//          const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+//          //const userId = decodedToken.userId;
+//         console.log(req.headers,token)
+       
+//        } catch {
+//         res.status(401).json({
+//           error: new Error('Invalid request!')
+//       });
+//      }
+// })
 
 
 app.post('/Notes',async (req,res)=>{
