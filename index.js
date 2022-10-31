@@ -29,22 +29,19 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
     const {email, password} = req.body;
     const user = await UserModel.findOne({email});
-    console.log(user)
+    console.log(user,password,email)
     const hashed_password = user.password;
     bcrypt.compare(password, hashed_password, function(err, result) {
         if(result){
             const token = jwt.sign({email : email}, 'abcd12345')
             res.send({"msg" : "Login successfull", "token" : token})
         }
-        
         else {
             res.send("Login failed");
             console.log(err);
-            console.log(password,hashed_password);
-        }
-        
+            console.log(password,result);
+        } 
     });
-    
 })
 app.use((req,res,next)=>{
     try {
@@ -95,10 +92,9 @@ app.delete("/Notes/:id" , async(req,res)=>{
 })
 app.listen(8005,async ()=>{
     try{
-        await
-        console.log("Connected")
+        await connection
+       console.log("Connected")
     }catch{
-        await 
         console.log("Not Connected");
     }
     console.log("Listening on port 8004")
