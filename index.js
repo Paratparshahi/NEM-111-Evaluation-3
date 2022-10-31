@@ -3,7 +3,7 @@ const app=express();
 
 app.use(express.json())
 app.get('/',(req,res)=>{
-   res.send("Home Page")
+   res.send("Home Pa")
 })
 
 app.listen(8004,async ()=>{
