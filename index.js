@@ -5,7 +5,10 @@ app.use(express.json())
 app.get('/',(req,res)=>{
    res.send("Home Pa")
 })
-
+app.post('/signup',(req,res)=>{
+    const {email, password} = req.body;
+    console.log('email',email)
+})
 app.listen(8004,async ()=>{
     try{
         await
